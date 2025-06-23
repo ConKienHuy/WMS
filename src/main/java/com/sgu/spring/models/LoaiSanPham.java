@@ -13,13 +13,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "donvitinh")
-public class DonViTinh {
+@Table(name = "loaisanpham")
+public class LoaiSanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tenDonViTinh;
+    private String maLSP;
+
+    private String tenLSP;
 
     private String ghiChu;
 

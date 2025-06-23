@@ -40,7 +40,7 @@ public class DonViTinhController {
     }
 
     @PutMapping({"/{id}"})
-    public ResponseEntity<DonViTinhResponse> getById(@PathVariable("id") long id, @RequestBody @Valid DonViTinhRequest updateRequest) {
+    public ResponseEntity<DonViTinhResponse> update(@PathVariable("id") long id, @RequestBody @Valid DonViTinhRequest updateRequest) {
         DonViTinhResponse response = donViTinhService.update(id, updateRequest);
         return ResponseEntity.ok(response);
     }

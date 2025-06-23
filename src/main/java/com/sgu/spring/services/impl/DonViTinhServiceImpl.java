@@ -73,7 +73,7 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     private DonViTinh getEntityById(Long id) {
         DonViTinh donViTinh = donViTinhRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy đơn vị tính với ID: " + id + "."));
-        if(!donViTinh.isEnable) {
+        if(!donViTinh.isEnable()) {
             throw new EntityInactiveException("Đơn vị tính với ID: " + id + " không hoạt động.");
         }
 

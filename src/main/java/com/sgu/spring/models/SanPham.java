@@ -13,19 +13,32 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "donvitinh")
-public class DonViTinh {
+@Table(name = "sanpham")
+public class SanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tenDonViTinh;
+    @Column(name = "ma_san_pham")
+    private String maSanPham;
 
-    private String ghiChu;
+    @Column(name = "ten_san_pham")
+    private String tenSanPham;
 
+    @ManyToOne
+    @JoinColumn(name = "loai_san_pham_id")
+    private LoaiSanPham loaiSanPham;
+
+    @ManyToOne
+    @JoinColumn(name = "don_vi_tinh_id")
+    private DonViTinh donViTinh;
+
+    @Column(name = "ngay_tao")
     private LocalDateTime ngayTao;
 
+    @Column(name = "ngay_cap_nhat")
     private LocalDateTime ngayCapNhat;
 
+    @Column(name = "trang_thai")
     private boolean isEnable;
 }
