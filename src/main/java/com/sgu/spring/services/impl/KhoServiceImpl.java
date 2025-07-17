@@ -29,7 +29,8 @@ public class KhoServiceImpl implements KhoService {
     @Override
     public List<KhoResponse> getAllActive() {
         List<Kho> khoList = khoRepository.findAllActive();
-        return khoMapper.toDtoList(khoList);
+
+        return khoList.stream().map(khoMapper::toDto).toList();
     }
 
     @Override

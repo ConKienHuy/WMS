@@ -4,18 +4,22 @@ import com.sgu.spring.dtos.donvitinhs.DonViTinhRequest;
 import com.sgu.spring.dtos.donvitinhs.DonViTinhResponse;
 import com.sgu.spring.models.DonViTinh;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface DonViTinhMapper {
 
-    DonViTinh toEntity(DonViTinhRequest addDonViTinhRequest);
+    @Mapping(source = "tenDonViTinh", target = "tenDonViTinh")
+    @Mapping(source = "ghiChu", target = "ghiChu")
+    DonViTinh toEntity(DonViTinhRequest request);
 
-    DonViTinhResponse toDto(DonViTinh donViTinh);
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "tenDonViTinh", target = "tenDonViTinh")
+    @Mapping(source = "ghiChu", target = "ghiChu")
+    DonViTinhResponse toDto(DonViTinh entity);
 
-    List<DonViTinhResponse> toDtoList(List<DonViTinh> donViTinhList);
-
-    DonViTinh updateEntity(@MappingTarget DonViTinh donViTinh, DonViTinhRequest updateDonViTinhRequest);
+    @Mapping(source = "tenDonViTinh", target = "tenDonViTinh")
+    @Mapping(source = "ghiChu", target = "ghiChu")
+    void updateDonViTinh(@MappingTarget DonViTinh donViTinh, DonViTinhRequest updateDonViTinhRequest);
 }

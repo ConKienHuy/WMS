@@ -29,7 +29,15 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
     private CTPhieuNhapMapper ctMapper;
 
     @Autowired
-    public PhieuNhapServiceImpl(PhieuNhapRepository phieuNhapRepository, KhoRepository khoRepo, NhaCungCapRepository nccRepo, ChiTietPhieuNhapRepository ctRepo, SanPhamRepository sanPhamRepo, PhieuNhapMapper phieuNhapMapper, CTPhieuNhapMapper ctMapper) {
+    public PhieuNhapServiceImpl(
+            PhieuNhapRepository phieuNhapRepository,
+            KhoRepository khoRepo,
+            NhaCungCapRepository nccRepo,
+            ChiTietPhieuNhapRepository ctRepo,
+            SanPhamRepository sanPhamRepo,
+            PhieuNhapMapper phieuNhapMapper,
+            CTPhieuNhapMapper ctMapper)
+    {
         this.phieuNhapRepo = phieuNhapRepository;
         this.khoRepo = khoRepo;
         this.nccRepo = nccRepo;
@@ -41,11 +49,10 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
 
     @Override
     public PhieuNhapResponse getById(Long id) {
-        PhieuNhap phieuNhap = phieuNhapRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Không tìm thấy phiếu nhập với ID: " +id+ " trên hệ thống."));
-        if(!phieuNhap.isEnable()) {
-            throw new EntityInactiveException("Phiếu nhập không hoạt động.");
-        }
+        PhieuNhap phieuNhap = this.getPhieuNhapById(id);
+
         PhieuNhapResponse response = phieuNhapMapper.toDTO(phieuNhap);
+
         return response;
     }
 
@@ -56,10 +63,14 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
 
         List<ChiTietPhieuNhap> chiTietList = new ArrayList<>();
         for (CTPNRequest addCTRequest : addRequest.getChiTietPhieuNhap()) {
-            ChiTietPhieuNhap chiTietPhieuNhap = ctMapper.toEntity(addCTRequest, sanPhamRepo);
-            chiTietPhieuNhap.setPhieuNhap(phieuNhap);
+            ChiTietPhieuNhap chiTietPhieuNhap = ctMapper.toEntity(addCTRequest);
+
+            chiTietPhieuNhap.setPhieuNhap(phieuNhap); // Set Phiếu Nhập
+            chiTietPhieuNhap.setSanPham(sanPhamRepo.findById(addCTRequest.getSanPhamID()).orElseThrow()); // Set Sản Phẩm
+
             chiTietList.add(chiTietPhieuNhap);
         }
+
         ctRepo.saveAll(chiTietList);
 
         PhieuNhapResponse response = phieuNhapMapper.toDTO(phieuNhap);
@@ -70,25 +81,36 @@ public class PhieuNhapServiceImpl implements PhieuNhapService {
     // Sửa header phiếu nhập
     @Override
     public PhieuNhapResponse update(Long id, UpdatePhieuNhapRequest updateRequest) {
-        PhieuNhap phieuNhap = phieuNhapRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Không tìm thấy phiếu nhập với ID: " +id+ " trên hệ thống."));
-        if(!phieuNhap.isEnable()) {
-            throw new EntityInactiveException("Phiếu nhập không hoạt động.");
-        }
+        PhieuNhap phieuNhap = this.getPhieuNhapById(id);
+
         phieuNhapMapper.updateEntity(phieuNhap ,updateRequest, khoRepo, nccRepo);
         phieuNhapRepo.save(phieuNhap);
+
         PhieuNhapResponse response = phieuNhapMapper.toDTO(phieuNhap);
+
         return response;
     }
 
     @Override
     public PhieuNhapResponse delete(Long id) {
-        PhieuNhap phieuNhap = phieuNhapRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Không tìm thấy phiếu nhập với ID: " +id+ " trên hệ thống."));
+        PhieuNhap phieuNhap = this.getPhieuNhapById(id);
+
+        phieuNhap.setEnable(false);
+        phieuNhap.setNgayCapNhat(LocalDateTime.now());
+
+        phieuNhapRepo.save(phieuNhap);
+
+        return phieuNhapMapper.toDTO(phieuNhap);
+    }
+
+    private PhieuNhap getPhieuNhapById(Long id) {
+        PhieuNhap phieuNhap = phieuNhapRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy phiếu nhập với ID: " +id+ " trên hệ thống."));
+
         if(!phieuNhap.isEnable()) {
             throw new EntityInactiveException("Phiếu nhập không hoạt động.");
         }
-        phieuNhap.setEnable(false);
-        phieuNhap.setNgayCapNhat(LocalDateTime.now());
-        phieuNhapRepo.save(phieuNhap);
-        return phieuNhapMapper.toDTO(phieuNhap);
+
+        return phieuNhap;
     }
 }

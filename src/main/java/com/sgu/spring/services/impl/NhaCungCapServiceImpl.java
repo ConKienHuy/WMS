@@ -29,7 +29,8 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
     @Override
     public List<NhaCungCapResponse> getAllActive() {
         List<NhaCungCap> nhaCungCapList = nhaCungCapRepository.findAllActive();
-        return nhaCungCapMapper.toDtoList(nhaCungCapList);
+
+        return nhaCungCapList.stream().map(nhaCungCapMapper::toDto).toList();
     }
 
     @Override

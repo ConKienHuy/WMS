@@ -11,22 +11,14 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CTPhieuNhapMapper {
 
-    @Mapping(target = "ngayTao", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "ngayCapNhat", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "enable", constant = "true")
-    ChiTietPhieuNhap toEntity(CTPNRequest addRequest, @Context SanPhamRepository spRepo);
+    @Mapping(source = "soLuongNhap", target = "soLuongNhap")
+    @Mapping(source = "donGiaNhapNhap", target = "donGiaNhapNhap")
+    ChiTietPhieuNhap toEntity(CTPNRequest addRequest);
 
-    @Mapping(target = "ngayCapNhat", expression = "java(java.time.LocalDateTime.now())")
-    void updateEntity(@MappingTarget ChiTietPhieuNhap ctPhieuNhap , CTPNRequest request, @Context SanPhamRepository spRepo);
+    @Mapping(source = "soLuongNhap", target = "soLuongNhap")
+    @Mapping(source = "donGiaNhapNhap", target = "donGiaNhapNhap")
+    void updateEntity(@MappingTarget ChiTietPhieuNhap ctPhieuNhap , CTPNRequest request);
 
-    @Mapping(target = "enable", constant = "true")
-    List<CTPNResponse> toCTPNResponseList(List<ChiTietPhieuNhap> ctList, @Context SanPhamRepository spRepo);
 
-    @AfterMapping
-    default void mapRelationship(@MappingTarget ChiTietPhieuNhap chiTietPhieuNhap,
-                                 CTPNRequest request,
-                                 @Context SanPhamRepository spRepo) {
-        chiTietPhieuNhap.setSanPham(spRepo.findById(request.getSanPhamID()).get());
-    }
 
 }

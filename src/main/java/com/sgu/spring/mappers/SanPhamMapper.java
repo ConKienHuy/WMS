@@ -14,11 +14,16 @@ import java.util.List;
         uses = {LoaiSanPhamMapper.class, DonViTinhMapper.class})
 public interface SanPhamMapper {
 
+    @Mapping(source = "maSanPham", target = "maSanPham")
+    @Mapping(source = "tenSanPham", target = "tenSanPham")
     SanPham toEntity(SanPhamRequest addSanPhamRequest);
 
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "maSanPham", target = "maSanPham")
+    @Mapping(source = "tenSanPham", target = "tenSanPham")
     SanPhamResponse toDto(SanPham sanPham);
 
-    List<SanPhamResponse> toDtoList(List<SanPham> sanPhamList);
-
+    @Mapping(source = "maSanPham", target = "maSanPham")
+    @Mapping(source = "tenSanPham", target = "tenSanPham")
     SanPham updateEntity(@MappingTarget SanPham sanPham, SanPhamRequest updateSanPhamRequest);
 }

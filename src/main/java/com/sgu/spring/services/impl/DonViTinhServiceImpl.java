@@ -28,7 +28,8 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     @Override
     public List<DonViTinhResponse> getAllActive() {
         List<DonViTinh> donViTinhList = donViTinhRepository.findAllActive();
-        return donViTinhMapper.toDtoList(donViTinhList);
+
+        return donViTinhList.stream().map(donViTinhMapper::toDto).toList();
     }
 
     @Override
@@ -53,7 +54,8 @@ public class DonViTinhServiceImpl implements DonViTinhService {
     public DonViTinhResponse update(Long id, DonViTinhRequest updateRequest) {
         DonViTinh donViTinh = this.getEntityById(id);
 
-        donViTinhMapper.updateEntity(donViTinh, updateRequest);
+        // Update đơn vị tính
+        donViTinhMapper.updateDonViTinh(donViTinh, updateRequest);
         donViTinh.setNgayCapNhat(LocalDateTime.now());
         donViTinhRepository.save(donViTinh);
 

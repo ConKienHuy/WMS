@@ -28,7 +28,8 @@ public class LoaiSanPhamServiceImpl implements LoaiSanPhamService {
     @Override
     public List<LoaiSanPhamResponse> getAllActive() {
         List<LoaiSanPham> loaiSanPhamList = loaiSanPhamRepository.findAllActive();
-        return loaiSanPhamMapper.toDtoList(loaiSanPhamList);
+
+        return loaiSanPhamList.stream().map(loaiSanPhamMapper::toDto).toList();
     }
 
     @Override

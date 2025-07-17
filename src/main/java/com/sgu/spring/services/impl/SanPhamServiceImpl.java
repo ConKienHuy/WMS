@@ -41,7 +41,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     @Override
     public List<SanPhamResponse> getAllActive() {
         List<SanPham> sanPhamList = sanPhamRepository.findAllActive();
-        return sanPhamMapper.toDtoList(sanPhamList);
+
+        return sanPhamList.stream().map(sanPhamMapper::toDto).toList();
     }
 
     @Override
